@@ -13,9 +13,9 @@
 package main
 
 import (
-	"chinf-bot2/messager"
 	"fmt"
 	"log"
+	// "messager"
 	"net/http"
 	"os"
 
@@ -58,13 +58,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 		selfevent = event
-		messager.PushMessage(selfevent, botGlobal)
+		PushMessage(selfevent, botGlobal)
 	}
 
 }
 
 func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
-	messager.PushMessage(selfevent, botGlobal)
+	PushMessage(selfevent, botGlobal)
 }
 
 // func before_main() {
