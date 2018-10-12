@@ -10,8 +10,8 @@ func PushMessage(event *linebot.Event, bot *linebot.Client) {
 	if err != nil {
 		print(err)
 	}
-	_, err = bot.PushMessage(event.Source.UserID, linebot.NewStickerMessage("1", "11")).Do()
-	if err != nil {
-		print(err)
+	// _, err = bot.PushMessage(event.Source.UserID, linebot.NewStickerMessage("1", "11")).Do()
+	// if err != nil {
+	// 	print(err)
 	}
 }
