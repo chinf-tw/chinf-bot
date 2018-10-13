@@ -30,5 +30,5 @@
   unused-packages = true
 
 [metadata.heroku]
-  root-package = 'github.com/chinf1996/chinf-bot'
+  root-package = 'github.com/kkdai/LineBotTemplate'
   # go-version = '1.10.1'
