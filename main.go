@@ -65,6 +65,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 		selfevent = event
+		println("準備進入messager階段")
 		messager.PushMessage(selfevent, botGlobal)
 	}
 
