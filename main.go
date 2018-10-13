@@ -13,12 +13,14 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
-	// "messager"
 	"net/http"
 	"os"
 
+	messager "github.com/chinf1996/Line-bot-messager"
+	_ "github.com/lib/pq"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
@@ -63,12 +65,35 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 		selfevent = event
-		PushMessage(selfevent, botGlobal)
+		messager.PushMessage(selfevent, botGlobal)
 	}
 
 }
 
 func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
-	PushMessage(selfevent, botGlobal)
+	messager.PushMessage(selfevent, botGlobal)
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	stmt, err := db.Prepare("INSERT INTO spotify_user(name,line_id) VALUES(?),?);")
+	if err != nil {
+		log.Fatal(err)
+	}
+	res, err := stmt.Exec("洪權甫", "ABC")
+	if err != nil {
+		log.Fatal(err)
+	}
+	lastID, err := res.LastInsertId()
+	if err != nil {
+		log.Fatal(err)
+	}
+	rowCnt, err := res.RowsAffected()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("ID = %d, affected = %d\n", lastID, rowCnt)
+
+	defer db.Close()
 }
