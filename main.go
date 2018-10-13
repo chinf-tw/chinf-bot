@@ -93,15 +93,15 @@ func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	println(userid)
-	lastID, err := res.LastInsertId()
-	if err != nil {
-		log.Fatal(err)
-	}
-	rowCnt, err := res.RowsAffected()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("ID = %d, affected = %d\n", lastID, rowCnt)
+	// lastID, err := res.LastInsertId()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// rowCnt, err := res.RowsAffected()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// log.Printf("ID = %d, affected = %d\n", lastID, rowCnt)
 
 	defer db.Close()
 }
