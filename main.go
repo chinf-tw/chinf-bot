@@ -78,11 +78,13 @@ func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	stmt, err := db.Prepare("INSERT INTO spotify_user(name , line_id) VALUES(\'?\' , \'?\');")
+	stmt, err := db.Prepare("INSERT INTO spotify_user(`name` , `line_id`) VALUES (?, ?);")
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, err := stmt.Exec("洪權甫", "ABC")
+	name := "洪權甫"
+	line_id := "lmsv"
+	res, err := stmt.Exec(name, line_id)
 	if err != nil {
 		log.Fatal(err)
 	}
