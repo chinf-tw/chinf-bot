@@ -82,27 +82,33 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		println("準備進入messager階段")
-		messager.PushMessage(selfevent, botGlobal)
+		// println("準備進入messager階段")
+		// messager.PushMessage(selfevent, botGlobal)
 	}
 
 }
 
 func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
-	messager.PushMessage(selfevent, botGlobal)
+
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	defer db.Close()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
-	query := `INSERT INTO spotify_user(name , line_id) VALUES ('洪權甫', 'ACV') RETURNING id;`
+	query := `select line_id from spotify_user where name is null;`
 
-	var userid int
-	err = db.QueryRow(query).Scan(&userid)
+	rows, err := db.Query(query)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
-	println(userid)
+	defer rows.Close()
+	for rows.Next() {
+		var userID string
+		if err := rows.Scan(&userID); err != nil {
+			log.Println(err)
+		}
+		messager.PushMessage(userID, botGlobal)
+	}
 
 }
