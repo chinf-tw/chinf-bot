@@ -88,7 +88,7 @@ func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 	// res, err := db.Exec(query)
 	// res, err := stmt.Exec(name, line_id)
 	var userid int
-	err := db.QueryRow(query).Scan(&userid)
+	err = db.QueryRow(query).Scan(&userid)
 	if err != nil {
 		log.Fatal(err)
 	}
