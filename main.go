@@ -78,7 +78,7 @@ func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	query := "INSERT INTO spotify_user(name , line_id) VALUES ($1, $2);"
+	query := "INSERT INTO spotify_user(name , line_id) VALUES ($1, $2) RETURNING id;"
 	// stmt, err := db.Prepare()
 	// if err != nil {
 	// 	log.Fatal(err)
