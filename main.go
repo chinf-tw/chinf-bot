@@ -63,8 +63,25 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	defer db.Close()
+	if err != nil {
+		log.Println(err)
+	}
+
 	for _, event := range events {
+
 		selfevent = event
+
+		if event.Type == linebot.EventTypeFollow {
+			query := fmt.Sprintf("INSERT INTO spotify_user( line_id) VALUES ('%v') RETURNING id;", event.Source.UserID)
+			var userid int
+			err = db.QueryRow(query).Scan(&userid)
+			if err != nil {
+				log.Println(err)
+			}
+		}
+
 		println("準備進入messager階段")
 		messager.PushMessage(selfevent, botGlobal)
 	}
@@ -75,33 +92,17 @@ func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 	messager.PushMessage(selfevent, botGlobal)
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	defer db.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
 	query := `INSERT INTO spotify_user(name , line_id) VALUES ('洪權甫', 'ACV') RETURNING id;`
-	// stmt, err := db.Prepare()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// name := "洪權甫"
-	// line_id := "lmsv"
-	// res, err := db.Exec(query)
-	// res, err := stmt.Exec(name, line_id)
+
 	var userid int
 	err = db.QueryRow(query).Scan(&userid)
 	if err != nil {
 		log.Fatal(err)
 	}
 	println(userid)
-	// lastID, err := res.LastInsertId()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// rowCnt, err := res.RowsAffected()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// log.Printf("ID = %d, affected = %d\n", lastID, rowCnt)
 
-	defer db.Close()
 }
