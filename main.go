@@ -70,7 +70,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		selfevent = event
 
 		if event.Type == linebot.EventTypeFollow {
-			query := fmt.Sprintf("INSERT INTO spotify_user( line_id) VALUES ('%v') RETURNING id;", event.Source.UserID)
+			query := fmt.Sprintf("INSERT INTO spotify_user( line_id,creation_time) VALUES ('%v',) RETURNING id;", event.Source.UserID)
 			var userid int
 			err = db.QueryRow(query).Scan(&userid)
 			if err != nil {
@@ -101,7 +101,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if TUserID == event.Source.UserID {
 					var str string
 					query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", message.Text, event.Source.UserID)
-					if err := db.QueryRow(query).Scan(&str); err != nil {
+					if err := db.QueryRow(query); err != nil {
 						log.Println(err)
 					}
 					println(query)
