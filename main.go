@@ -76,6 +76,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Println(err)
 			}
+			messager.PushMessage(event.Source.UserID, botGlobal)
 		} else if event.Type == linebot.EventTypePostback {
 			if event.Postback.Data == fmt.Sprintf("[%v][yes]", event.Source.UserID) {
 				isRepeat := false
@@ -94,9 +95,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		switch message := event.Message.(type) {
 		case *linebot.TextMessage:
-			if _, err = botGlobal.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
-				log.Print(err)
-			}
 
 			for _, TUserID := range temporaryStorage["User_ID"] {
 				println(TUserID)
@@ -109,6 +107,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					println(query)
 					println(str)
 				}
+			}
+
+			if _, err = botGlobal.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
+				log.Print(err)
 			}
 		}
 	}
@@ -123,6 +125,10 @@ func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
+	joinMember(db)
+}
+
+func joinMember(db *sql.DB) {
 	query := `select line_id from spotify_user where name is null;`
 
 	rows, err := db.Query(query)
@@ -137,5 +143,4 @@ func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		messager.PushMessage(userID, botGlobal)
 	}
-
 }
