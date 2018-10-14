@@ -41,26 +41,34 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _tempo
 
 	switch message := event.Message.(type) {
 	case *linebot.TextMessage:
-
+		var err error
 		for _, TUserID := range _temporaryStorage["User_ID"] {
 			println(TUserID)
 			if TUserID == event.Source.UserID {
 				query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", message.Text, event.Source.UserID)
-				dbQueryRow(db, query)
+				err = dbQueryRow(db, query)
 			}
 		}
+		var reply string
+		if err != nil {
+			reply = "恭喜成為會員！"
+		} else {
+			reply = "出了一點問題，詢問一下工程師這發生什麼事吧。"
+		}
 
-		if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
+		if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(reply)).Do(); err != nil {
 			log.Print(err)
 		}
 	}
 }
 
-func dbQueryRow(db *sql.DB, query string) {
-	var userid int
+func dbQueryRow(db *sql.DB, query string) (err error) {
+	var userid interface{}
 	if err := db.QueryRow(query).Scan(&userid); err != nil {
 		log.Println(query, " ＜＝出問題！\n", err)
+		return err
 	}
 	println(query)
 	println(userid)
+	return nil
 }
