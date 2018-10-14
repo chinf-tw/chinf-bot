@@ -99,11 +99,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 			for _, TUserID := range temporaryStorage["User_ID"] {
 				if TUserID == event.Source.UserID {
+					var str string
 					query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", message.Text, event.Source.UserID)
-					if err := db.QueryRow(query); err != nil {
+					if err := db.QueryRow(query).Scan(&str); err != nil {
 						log.Println(err)
 					}
-
+					println(query)
+					println(str)
 				}
 			}
 		}
