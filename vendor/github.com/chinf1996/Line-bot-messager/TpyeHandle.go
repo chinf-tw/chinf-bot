@@ -14,7 +14,7 @@ func EventTypeHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _tem
 
 	case linebot.EventTypeFollow:
 
-		query := fmt.Sprintf("INSERT INTO spotify_user( line_id,creation_time) VALUES ('%v',) RETURNING id;", event.Source.UserID)
+		query := fmt.Sprintf("INSERT INTO spotify_user( line_id,creation_time) VALUES ('%v') RETURNING id;", event.Source.UserID)
 		dbQueryRow(db, query)
 		PushMessage(event.Source.UserID, bot)
 
