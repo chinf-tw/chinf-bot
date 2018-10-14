@@ -30,6 +30,7 @@ var temporaryStorage map[string][]string
 
 func main() {
 
+	temporaryStorage["User_ID"] = []string{}
 	bot, err := linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	botGlobal = bot
 	log.Println("Bot:", bot, " err:", err)
