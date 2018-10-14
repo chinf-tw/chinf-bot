@@ -84,7 +84,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						break
 					}
 				}
-				if isRepeat {
+				if !isRepeat {
 					temporaryStorage["User_ID"] = append(temporaryStorage["User_ID"], event.Source.UserID)
 				}
 
@@ -98,6 +98,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			for _, TUserID := range temporaryStorage["User_ID"] {
+				println(TUserID)
 				if TUserID == event.Source.UserID {
 					var str string
 					query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", message.Text, event.Source.UserID)
