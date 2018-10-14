@@ -3,11 +3,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:3f6808b0c0e2654eb6fba061a487d5bec2a5bdba3f57c0cc25ab29b3e864d7d9"
+  digest = "1:4f7a8b40992f5019ae852aa94a91fca36bd26fc21e11bcf0f3c0b91fd1f8f647"
   name = "github.com/chinf1996/Line-bot-messager"
   packages = ["."]
   pruneopts = "UT"
-  revision = "b360b7676562870f3826e08a0d3ea1987aec5082"
+  revision = "24bc23827e8a4fcf3bccc0f04d29ec912bca24c2"
 
 [[projects]]
   digest = "1:8ef506fc2bb9ced9b151dafa592d4046063d744c646c1bbe801982ce87e4bc24"
