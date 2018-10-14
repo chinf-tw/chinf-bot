@@ -1,6 +1,7 @@
 package messager
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 
@@ -33,5 +34,23 @@ func PushMessageSay(UserID string, bot *linebot.Client, say string) {
 	_, err := bot.PushMessage(UserID, message).Do()
 	if err != nil {
 		print(err)
+	}
+}
+
+//JoinMember 處理已經有加好友，但還沒加會員的使用者
+func JoinMember(db *sql.DB, bot *linebot.Client) {
+	query := `select line_id from spotify_user where name is null;`
+
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Println(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var userID string
+		if err := rows.Scan(&userID); err != nil {
+			log.Println(err)
+		}
+		PushMessage(userID, bot)
 	}
 }

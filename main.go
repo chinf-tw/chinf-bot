@@ -25,7 +25,6 @@ import (
 )
 
 var botGlobal *linebot.Client
-var selfevent *linebot.Event
 var temporaryStorage map[string][]string
 
 func main() {
@@ -45,19 +44,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	events, err := botGlobal.ParseRequest(r)
 
-	if err == nil {
-
-		w.WriteHeader(200)
-
-	} else {
-
-		if err == linebot.ErrInvalidSignature {
-			w.WriteHeader(400)
-		} else {
-			w.WriteHeader(500)
-		}
-		return
-	}
+	judgeCallBackReq(w, err)
 
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	defer db.Close()
@@ -67,54 +54,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 
-		selfevent = event
+		messager.EventTypeHandle(event, db, botGlobal, temporaryStorage)
+		messager.MessageHandle(event, db, botGlobal, temporaryStorage)
 
-		if event.Type == linebot.EventTypeFollow {
-			query := fmt.Sprintf("INSERT INTO spotify_user( line_id,creation_time) VALUES ('%v',) RETURNING id;", event.Source.UserID)
-			var userid int
-			err = db.QueryRow(query).Scan(&userid)
-			if err != nil {
-				log.Println(err)
-			}
-			messager.PushMessage(event.Source.UserID, botGlobal)
-		} else if event.Type == linebot.EventTypePostback {
-			if event.Postback.Data == fmt.Sprintf("[%v][yes]", event.Source.UserID) {
-				isRepeat := false
-				for _, TUserID := range temporaryStorage["User_ID"] {
-					if TUserID == event.Source.UserID {
-						isRepeat = true
-						break
-					}
-				}
-				if !isRepeat {
-					temporaryStorage["User_ID"] = append(temporaryStorage["User_ID"], event.Source.UserID)
-				}
-
-				messager.PushMessageSay(event.Source.UserID, botGlobal, "請輸入您的姓名")
-			}
-		}
-		switch message := event.Message.(type) {
-		case *linebot.TextMessage:
-
-			for _, TUserID := range temporaryStorage["User_ID"] {
-				println(TUserID)
-				if TUserID == event.Source.UserID {
-					var str string
-					query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", message.Text, event.Source.UserID)
-					if err := db.QueryRow(query); err != nil {
-						log.Println(err)
-					}
-					println(query)
-					println(str)
-				}
-			}
-
-			if _, err = botGlobal.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
-				log.Print(err)
-			}
-		}
 	}
-
 }
 
 func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
@@ -125,22 +68,5 @@ func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-	joinMember(db)
-}
-
-func joinMember(db *sql.DB) {
-	query := `select line_id from spotify_user where name is null;`
-
-	rows, err := db.Query(query)
-	if err != nil {
-		log.Println(err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var userID string
-		if err := rows.Scan(&userID); err != nil {
-			log.Println(err)
-		}
-		messager.PushMessage(userID, botGlobal)
-	}
+	messager.JoinMember(db, botGlobal)
 }
