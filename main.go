@@ -26,12 +26,7 @@ import (
 
 var botGlobal *linebot.Client
 var selfevent *linebot.Event
-
-// var checking bool = false
-// var runMassage = 0
-// var name = ""
-// var isSay = false
-// var porintIndexs = 0
+var temporaryStorage map[string][]string
 
 func main() {
 
@@ -80,10 +75,38 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Println(err)
 			}
-		}
+		} else if event.Type == linebot.EventTypePostback {
+			if event.Postback.Data == fmt.Sprintf("[%v][yes]", event.Source.UserID) {
+				isRepeat := false
+				for _, TUserID := range temporaryStorage["User_ID"] {
+					if TUserID == event.Source.UserID {
+						isRepeat = true
+						break
+					}
+				}
+				if isRepeat {
+					temporaryStorage["User_ID"] = append(temporaryStorage["User_ID"], event.Source.UserID)
+				}
 
-		// println("準備進入messager階段")
-		// messager.PushMessage(selfevent, botGlobal)
+				messager.PushMessageSay(event.Source.UserID, botGlobal, "請輸入您的姓名")
+			}
+		}
+		switch message := event.Message.(type) {
+		case *linebot.TextMessage:
+			if _, err = botGlobal.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
+				log.Print(err)
+			}
+
+			for _, TUserID := range temporaryStorage["User_ID"] {
+				if TUserID == event.Source.UserID {
+					query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", message.Text, event.Source.UserID)
+					if err := db.QueryRow(query); err != nil {
+						log.Println(err)
+					}
+
+				}
+			}
+		}
 	}
 
 }
