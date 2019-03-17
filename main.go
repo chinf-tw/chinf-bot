@@ -13,7 +13,7 @@
 package main
 
 import (
-	// "chinf-bot/messager"
+	"chinf-bot/messager"
 	"database/sql"
 	"fmt"
 	"log"
@@ -42,7 +42,7 @@ func main() {
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
-	_, err := botGlobal.ParseRequest(r)
+	events, err := botGlobal.ParseRequest(r)
 
 	judgeCallBackReq(w, err)
 
@@ -52,12 +52,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	// for _, event := range events {
+	for _, event := range events {
 
-	// 	messager.EventTypeHandle(event, db, botGlobal, temporaryStorage)
-	// 	messager.MessageHandle(event, db, botGlobal, temporaryStorage)
+		messager.EventTypeHandle(event, db, botGlobal, temporaryStorage)
+		messager.MessageHandle(event, db, botGlobal, temporaryStorage)
 
-	// }
+	}
 }
 
 func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
@@ -68,5 +68,5 @@ func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-	// messager.JoinMember(db, botGlobal)
+	messager.JoinMember(db, botGlobal)
 }
