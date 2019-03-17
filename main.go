@@ -35,6 +35,7 @@ func main() {
 	log.Println("Bot:", bot, " err:", err)
 	http.HandleFunc("/callback", callbackHandler)
 	http.HandleFunc("/chinf", selfcallbackHandler)
+	http.HandleFunc("/", testcallbackHandler)
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
@@ -69,4 +70,9 @@ func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 	messager.JoinMember(db, botGlobal)
+}
+
+//testcallbackHandler 測試伺服器是否正常用
+func testcallbackHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, you've requested: %s\n", r.URL.Path)
 }
