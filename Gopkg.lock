@@ -2,21 +2,21 @@
 
 
 [[projects]]
-  digest = "1:8ef506fc2bb9ced9b151dafa592d4046063d744c646c1bbe801982ce87e4bc24"
+  digest = "1:6257696f43e8f2421e35f3a32be6f12d1da43cbb1237a30f2c1bae08f1e324a2"
   name = "github.com/lib/pq"
   packages = [
     ".",
     "oid",
   ]
-  pruneopts = "UT"
+  pruneopts = "NT"
   revision = "4ded0e9383f75c197b3a2aaa6d590ac52df6fd79"
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:2b8a9e8b1db9234715edf563d3f294f42d037f58ce7eac8b482a04a07581b655"
+  digest = "1:bef1f3a0925d1fe4576300e96170a2e3e17c869cfa53336a7d977653b47ab403"
   name = "github.com/line/line-bot-sdk-go"
   packages = ["linebot"]
-  pruneopts = "UT"
+  pruneopts = "NT"
   revision = "3f6c2b7deef951e757f308e01ee0f7df89cb39c0"
   version = "v6.0.0"
 

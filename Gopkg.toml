@@ -27,9 +27,10 @@
 
 [prune]
   go-tests = true
-  unused-packages = true
+  # unused-packages = true
+  non-go = true
 
 [metadata.heroku]
-  root-package = 'github.com/chinf1996/chinf-bot'
+  root-package = 'chinf-bot'
   go-version = '1.10.1'
   install = [ "./..." ]
