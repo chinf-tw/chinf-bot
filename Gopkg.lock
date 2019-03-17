@@ -2,14 +2,6 @@
 
 
 [[projects]]
-  branch = "master"
-  digest = "1:4fa60ab88a9105999a0a8d3048bf1f72701dadf650a8d1d00459801f19bc06a7"
-  name = "github.com/chinf1996/Line-bot-messager"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "d15b92668ebaacfd444474807d0222b695c6272c"
-
-[[projects]]
   digest = "1:8ef506fc2bb9ced9b151dafa592d4046063d744c646c1bbe801982ce87e4bc24"
   name = "github.com/lib/pq"
   packages = [
@@ -21,18 +13,17 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:fc8b9119ac036faaab206f517421116d5cf2eaf35d213f6b5d8e2c74dba6f76c"
+  digest = "1:2b8a9e8b1db9234715edf563d3f294f42d037f58ce7eac8b482a04a07581b655"
   name = "github.com/line/line-bot-sdk-go"
   packages = ["linebot"]
   pruneopts = "UT"
-  revision = "d787aef1744dc11dbde0fac149e6fbbdbe29d3d6"
-  version = "v4.0.0"
+  revision = "3f6c2b7deef951e757f308e01ee0f7df89cb39c0"
+  version = "v6.0.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/chinf1996/Line-bot-messager",
     "github.com/lib/pq",
     "github.com/line/line-bot-sdk-go/linebot",
   ]

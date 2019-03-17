@@ -13,13 +13,13 @@
 package main
 
 import (
+	"chinf-bot/messager"
 	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-
-	messager "github.com/chinf1996/Line-bot-messager"
+	// messager "github.com/chinf1996/Line-bot-messager"
 	_ "github.com/lib/pq"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
