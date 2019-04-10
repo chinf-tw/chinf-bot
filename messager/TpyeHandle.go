@@ -54,6 +54,7 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _tempo
 			reply = "恭喜成為會員！"
 		} else {
 			reply = "出了一點問題，詢問一下工程師這發生什麼事吧。"
+			log.Println(err)
 		}
 
 		if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(reply)).Do(); err != nil {
