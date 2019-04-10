@@ -28,7 +28,7 @@ func PushMessage(UserID string, bot *linebot.Client) {
 	}
 }
 
-//PushMessageSay 可以藉由他講出你想講的話
+//PushMessageSay 可以藉由此講出你想講的話
 func PushMessageSay(UserID string, bot *linebot.Client, say string) {
 	message := linebot.NewTextMessage(say)
 	_, err := bot.PushMessage(UserID, message).Do()
