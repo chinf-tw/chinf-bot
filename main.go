@@ -98,5 +98,4 @@ func testCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 	}
 	userinfo.GetImage(botGlobal, db)
-	w.WriteHeader(200)
 }
