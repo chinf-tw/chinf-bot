@@ -14,12 +14,15 @@ package main
 
 import (
 	"chinf-bot/messager"
+	"chinf-bot/userinfo"
 	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+
 	// messager "github.com/chinf1996/Line-bot-messager"
+
 	_ "github.com/lib/pq"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -33,15 +36,15 @@ func main() {
 	bot, err := linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	botGlobal = bot
 	log.Println("Bot:", bot, " err:", err)
-	http.HandleFunc("/callback", callbackHandler)
-	http.HandleFunc("/chinf", selfcallbackHandler)
-	http.HandleFunc("/", testcallbackHandler)
+	http.HandleFunc("/callback", lineCallbackHandler)
+	http.HandleFunc("/chinf", selfCallbackHandler)
+	http.HandleFunc("/test", testCallbackHandler)
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
 }
 
-func callbackHandler(w http.ResponseWriter, r *http.Request) {
+func lineCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	events, err := botGlobal.ParseRequest(r)
 
@@ -58,10 +61,22 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		messager.EventTypeHandle(event, db, botGlobal, temporaryStorage)
 		messager.MessageHandle(event, db, botGlobal, temporaryStorage)
 
+
+		//(測試中)嘗試取得使用者給予之Line訊息
+		if event.Type == linebot.EventTypeMessage {
+			switch message := event.Message.(type) {
+			case *linebot.TextMessage:
+				log.Println(event.Source.UserID, "say : ", message.Text)
+				if _, err = botGlobal.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
+					log.Print(err)
+				}
+			}
+		}
 	}
+
 }
 
-func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
+func selfCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
@@ -72,7 +87,16 @@ func selfcallbackHandler(w http.ResponseWriter, r *http.Request) {
 	messager.JoinMember(db, botGlobal)
 }
 
-//testcallbackHandler 測試伺服器是否正常用
-func testcallbackHandler(w http.ResponseWriter, r *http.Request) {
+//testCallbackHandler 測試用區域
+func testCallbackHandler(w http.ResponseWriter, r *http.Request) {
+
 	fmt.Fprintf(w, "Hello, you've requested: %s\n", r.URL.Path)
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	defer db.Close()
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(500)
+	}
+	userinfo.GetImage(botGlobal, db)
+	w.WriteHeader(200)
 }
