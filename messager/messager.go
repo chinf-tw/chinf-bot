@@ -8,9 +8,9 @@ import (
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
-func init() {
-	log.Println("Messager is camming...")
-}
+// func init() {
+// 	log.Println("Messager is camming...")
+// }
 
 //PushMessage 詢問是否要加入會員
 func PushMessage(UserID string, bot *linebot.Client) {

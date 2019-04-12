@@ -34,8 +34,11 @@ func main() {
 
 	temporaryStorage = map[string][]string{"User_ID": []string{}}
 	bot, err := linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
+	if err != nil {
+		log.Println(err)
+	}
 	botGlobal = bot
-	log.Println("Bot:", bot, " err:", err)
+	// log.Println("Bot:", bot, " err:", err)
 	http.HandleFunc("/callback", lineCallbackHandler)
 	http.HandleFunc("/chinf", selfCallbackHandler)
 	http.HandleFunc("/test", testCallbackHandler)
