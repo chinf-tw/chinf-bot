@@ -63,7 +63,7 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client) {
 				query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", string(userMessage[1:len(userMessage)-1]), event.Source.UserID)
 				err := dbQueryRow(db, query, event.Source.UserID, bot)
 				if err == nil {
-					PushMessageSay(event.Source.UserID, bot, "恭喜成為會員！")
+					PushMessageSay(event.Source.UserID, bot, "恭喜成為會員！/更改姓名成功！")
 				}
 			}
 		}
