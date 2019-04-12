@@ -54,12 +54,12 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _tempo
 	query := fmt.Sprintf("SELECT is_presence(%v)", event.Source.UserID)
 	rows, err := db.Query(query)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("TpyeHandle 57", err)
 	}
 	defer rows.Close()
 	for rows.Next() {
 		if err := rows.Scan(&isPresence); err != nil {
-			log.Fatal(err)
+			log.Println("TpyeHandle 62", err)
 		}
 	}
 	if *isPresence {
