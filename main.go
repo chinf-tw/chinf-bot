@@ -28,11 +28,9 @@ import (
 )
 
 var botGlobal *linebot.Client
-var temporaryStorage map[string][]string
 
 func main() {
 
-	temporaryStorage = map[string][]string{"User_ID": []string{}}
 	bot, err := linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	if err != nil {
 		log.Println(err)
@@ -61,8 +59,8 @@ func lineCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 
-		messager.EventTypeHandle(event, db, botGlobal, temporaryStorage)
-		messager.MessageHandle(event, db, botGlobal, temporaryStorage)
+		messager.EventTypeHandle(event, db, botGlobal)
+		messager.MessageHandle(event, db, botGlobal)
 
 		//(測試中)嘗試取得使用者給予之Line訊息
 		if event.Type == linebot.EventTypeMessage {

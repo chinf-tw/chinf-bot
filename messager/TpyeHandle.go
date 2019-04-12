@@ -10,7 +10,7 @@ import (
 )
 
 //EventTypeHandle 處理line-bot回應不同事件的對應狀況（例如：line-bot被加好友後的對應處理）
-func EventTypeHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _temporaryStorage map[string][]string) {
+func EventTypeHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client) {
 	userid := event.Source.UserID
 	switch event.Type {
 
@@ -49,7 +49,7 @@ func EventTypeHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _tem
 }
 
 //MessageHandle 處理正在與使用者溝通的事件（例如：取得加入會員的名字）
-func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _temporaryStorage map[string][]string) {
+func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client) {
 	var isPresence *bool
 	query := fmt.Sprintf("SELECT is_presence('%v')", event.Source.UserID)
 	rows, err := db.Query(query)
@@ -66,14 +66,17 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _tempo
 		switch message := event.Message.(type) {
 		case *linebot.TextMessage:
 			// var err error
-			for _, TUserID := range _temporaryStorage["User_ID"] {
-				println(TUserID)
-				if TUserID == event.Source.UserID {
-					query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", message.Text, event.Source.UserID)
-					dbQueryRow(db, query, event.Source.UserID, bot)
+			var userMessage []rune = []rune(message.Text)
+			//小解釋：預設得到的資料為[<name>]故需要先判斷開頭跟結尾是“[”跟“]”
+			if string(userMessage[0]) == "[" && string(userMessage[len(userMessage)-1]) == "]" {
+				query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", message.Text, event.Source.UserID)
+				err := dbQueryRow(db, query, event.Source.UserID, bot)
+				if err == nil {
+					PushMessageSay(event.Source.UserID, bot, "恭喜成為會員！")
 				}
+
 			}
-			PushMessageSay(event.Source.UserID, bot, "恭喜成為會員！")
+
 			// var reply string
 			// if err == nil {
 			// 	reply = "恭喜成為會員！"
