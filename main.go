@@ -61,7 +61,6 @@ func lineCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		messager.EventTypeHandle(event, db, botGlobal, temporaryStorage)
 		messager.MessageHandle(event, db, botGlobal, temporaryStorage)
 
-
 		//(測試中)嘗試取得使用者給予之Line訊息
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
@@ -97,5 +96,7 @@ func testCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		w.WriteHeader(500)
 	}
+	//測試加入會員功能用
+	messager.PushMessage(os.Getenv("chinf_line_id"), botGlobal)
 	userinfo.GetImage(botGlobal, db)
 }
