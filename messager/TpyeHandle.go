@@ -23,19 +23,8 @@ func EventTypeHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client) {
 	case linebot.EventTypePostback:
 
 		if event.Postback.Data == fmt.Sprintf("[%v][join member][yes]", userid) {
-			// isRepeat := false
-			// for _, TUserID := range _temporaryStorage["User_ID"] {
-			// 	if TUserID == userid {
-			// 		isRepeat = true
-			// 		break
-			// 	}
-			// }
-			// if !isRepeat {
-			// 	_temporaryStorage["User_ID"] = append(_temporaryStorage["User_ID"], userid)
-			// }
-			query := `select build_JoinMember_cache($1::character varying(100));`
-			// dbQueryRow(db, query, userid, bot)
 
+			query := `select build_JoinMember_cache($1::character varying(100));`
 			rows, err := db.Query(query, userid)
 			if err != nil {
 				log.Println("TpyeHandle 41 : ", err)
@@ -65,8 +54,7 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client) {
 	if *isPresence {
 		switch message := event.Message.(type) {
 		case *linebot.TextMessage:
-			// var err error
-			var userMessage []rune = []rune(message.Text)
+			var userMessage = []rune(message.Text)
 			//小解釋：預設得到的資料為[<name>]故需要先判斷開頭跟結尾是“[”跟“]”
 			isLeft := (string(userMessage[0]) == "[" || string(userMessage[0]) == "［")
 			isRight := (string(userMessage[len(userMessage)-1]) == "]" || string(userMessage[len(userMessage)-1]) == "］")
@@ -77,20 +65,7 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client) {
 				if err == nil {
 					PushMessageSay(event.Source.UserID, bot, "恭喜成為會員！")
 				}
-
 			}
-
-			// var reply string
-			// if err == nil {
-			// 	reply = "恭喜成為會員！"
-			// } else {
-			// 	reply = "出了一點問題，詢問一下工程師這發生什麼事吧。"
-			// 	log.Println(err)
-			// }
-
-			// if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(reply)).Do(); err != nil {
-			// 	log.Print(err)
-			// }
 		}
 	}
 
@@ -98,12 +73,6 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client) {
 
 func dbQueryRow(db *sql.DB, query string, userid string, bot *linebot.Client) (err error) {
 	var response interface{}
-	// if err := db.QueryRow(query).Scan(&response); err != nil {
-	// 	sayErr := "出了一點問題，詢問一下工程師這發生什麼事吧。"
-	// 	log.Println(query, " ＜＝出問題！\n", err)
-	// 	PushMessageSay(userid, bot, sayErr)
-	// 	return err
-	// }
 	err = db.QueryRow(query).Scan(&response)
 	switch {
 	case err == sql.ErrNoRows:
@@ -115,10 +84,6 @@ func dbQueryRow(db *sql.DB, query string, userid string, bot *linebot.Client) (e
 		return err
 	default:
 		log.Printf("%v 對資料庫進行了 %v，資料庫回應為：%v", userid, query, response)
-		// log.Printf("%v 對資料庫進行了 %v", userid, query)
 	}
-	// println(query)
-	// println(userid)
-
 	return nil
 }
