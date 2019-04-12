@@ -38,7 +38,7 @@ func EventTypeHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _tem
 
 			rows, err := db.Query(query, userid)
 			if err != nil {
-				log.Println(err)
+				log.Println("TpyeHandle 41 : ", err)
 			}
 			for rows.Next() {
 				rows.Scan()
