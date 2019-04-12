@@ -14,7 +14,7 @@ func init() {
 
 //PushMessage 詢問是否要加入會員
 func PushMessage(UserID string, bot *linebot.Client) {
-	text := fmt.Sprintf("[%v][yes]", UserID)
+	text := fmt.Sprintf("[%v][join member][yes]", UserID)
 	yesBtn := linebot.NewPostbackAction("我願意", text, "", "")
 	butTemplate := linebot.NewButtonsTemplate(
 		"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxbYZs9-LkRScXKWthdxw8gwUDUBkG34q0DgZnkI1pOkfybDx-",
@@ -33,7 +33,8 @@ func PushMessageSay(UserID string, bot *linebot.Client, say string) {
 	message := linebot.NewTextMessage(say)
 	_, err := bot.PushMessage(UserID, message).Do()
 	if err != nil {
-		print(err)
+		// print(err)
+		log.Println(err)
 	}
 }
 
