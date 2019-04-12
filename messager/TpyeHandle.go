@@ -51,15 +51,15 @@ func EventTypeHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _tem
 //MessageHandle 處理正在與使用者溝通的事件（例如：取得加入會員的名字）
 func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _temporaryStorage map[string][]string) {
 	var isPresence *bool
-	query := fmt.Sprintf("SELECT is_presence(%v)", event.Source.UserID)
+	query := fmt.Sprintf("SELECT is_presence('%v')", event.Source.UserID)
 	rows, err := db.Query(query)
 	if err != nil {
-		log.Println("TpyeHandle 57", err)
+		log.Println("MessageHandle的err有問題找它！！--1", err)
 	}
 	defer rows.Close()
 	for rows.Next() {
 		if err := rows.Scan(&isPresence); err != nil {
-			log.Println("TpyeHandle 62", err)
+			log.Println("MessageHandle的err有問題找它！！--2", err)
 		}
 	}
 	if *isPresence {
