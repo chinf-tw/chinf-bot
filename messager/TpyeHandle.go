@@ -76,7 +76,7 @@ func dbQueryRow(db *sql.DB, query string, userid string, bot *linebot.Client) (e
 	err = db.QueryRow(query).Scan(&response)
 	switch {
 	case err == sql.ErrNoRows:
-		log.Println(query, "沒有回傳資料")
+		log.Printf("%v 對資料庫進行了 %v，且沒有回傳資料", userid, query)
 	case err != nil:
 		sayErr := "出了一點問題，詢問一下工程師這發生什麼事吧。"
 		log.Println(query, " ＜＝出問題！\n", err)
