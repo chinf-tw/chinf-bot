@@ -63,15 +63,15 @@ func lineCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		messager.MessageHandle(event, db, botGlobal)
 
 		//(測試中)嘗試取得使用者給予之Line訊息
-		if event.Type == linebot.EventTypeMessage {
-			switch message := event.Message.(type) {
-			case *linebot.TextMessage:
-				log.Println(event.Source.UserID, "say : ", message.Text)
-				if _, err = botGlobal.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
-					log.Print(err)
-				}
-			}
-		}
+		// if event.Type == linebot.EventTypeMessage {
+		// 	switch message := event.Message.(type) {
+		// 	case *linebot.TextMessage:
+		// 		log.Println(event.Source.UserID, "say : ", message.Text)
+		// 		if _, err = botGlobal.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
+		// 			log.Print(err)
+		// 		}
+		// 	}
+		// }
 	}
 
 }
