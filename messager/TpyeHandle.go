@@ -72,7 +72,7 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client) {
 			isRight := (string(userMessage[len(userMessage)-1]) == "]" || string(userMessage[len(userMessage)-1]) == "］")
 			if isLeft && isRight {
 				//userMessage[1:len(userMessage)-2]的意思是去除掉[]的字詞
-				query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", userMessage[1:len(userMessage)-2], event.Source.UserID)
+				query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", string(userMessage[1:len(userMessage)-2]), event.Source.UserID)
 				err := dbQueryRow(db, query, event.Source.UserID, bot)
 				if err == nil {
 					PushMessageSay(event.Source.UserID, bot, "恭喜成為會員！")
