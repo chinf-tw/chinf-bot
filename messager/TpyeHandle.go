@@ -95,7 +95,14 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client) {
 
 func dbQueryRow(db *sql.DB, query string, userid string, bot *linebot.Client) (err error) {
 	var response interface{}
-	if err := db.QueryRow(query).Scan(&response); err != nil {
+	// if err := db.QueryRow(query).Scan(&response); err != nil {
+	// 	sayErr := "出了一點問題，詢問一下工程師這發生什麼事吧。"
+	// 	log.Println(query, " ＜＝出問題！\n", err)
+	// 	PushMessageSay(userid, bot, sayErr)
+	// 	return err
+	// }
+	row := db.QueryRow(query)
+	if err := row.Scan(&response); err != nil {
 		sayErr := "出了一點問題，詢問一下工程師這發生什麼事吧。"
 		log.Println(query, " ＜＝出問題！\n", err)
 		PushMessageSay(userid, bot, sayErr)
