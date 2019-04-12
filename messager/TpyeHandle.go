@@ -33,8 +33,16 @@ func EventTypeHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _tem
 			// if !isRepeat {
 			// 	_temporaryStorage["User_ID"] = append(_temporaryStorage["User_ID"], userid)
 			// }
-			query := fmt.Sprintf(`select build_JoinMember_cache('%v');`, userid)
-			dbQueryRow(db, query, userid, bot)
+			query := `select build_JoinMember_cache('%v');`
+			// dbQueryRow(db, query, userid, bot)
+
+			rows, err := db.Query(query, userid)
+			if err != nil {
+				log.Println(err)
+			}
+			for rows.Next() {
+				rows.Scan()
+			}
 			PushMessageSay(userid, bot, "請在“五分鐘內”輸入您的姓名，舉例：\n姓名為“王小明”\n就需輸入：[王小明]")
 		}
 	}
