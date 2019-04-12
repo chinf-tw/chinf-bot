@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	_ "github.com/lib/pq"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
@@ -32,7 +33,7 @@ func EventTypeHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _tem
 			// if !isRepeat {
 			// 	_temporaryStorage["User_ID"] = append(_temporaryStorage["User_ID"], userid)
 			// }
-			query := fmt.Sprintf("select build_JoinMember_cache('%v');", userid)
+			query := fmt.Sprintf(`select build_JoinMember_cache('%v');`, userid)
 			dbQueryRow(db, query, userid, bot)
 			PushMessageSay(userid, bot, "請在“五分鐘內”輸入您的姓名，舉例：\n姓名為“王小明”\n就需輸入：[王小明]")
 		}
