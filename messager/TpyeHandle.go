@@ -68,8 +68,11 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client) {
 			// var err error
 			var userMessage []rune = []rune(message.Text)
 			//小解釋：預設得到的資料為[<name>]故需要先判斷開頭跟結尾是“[”跟“]”
-			if string(userMessage[0]) == "[" && string(userMessage[len(userMessage)-1]) == "]" {
-				query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", message.Text, event.Source.UserID)
+			isLeft := (string(userMessage[0]) == "[" || string(userMessage[0]) == "［")
+			isRight := (string(userMessage[len(userMessage)-1]) == "]" || string(userMessage[len(userMessage)-1]) == "］")
+			if isLeft && isRight {
+				//userMessage[1:len(userMessage)-2]的意思是去除掉[]的字詞
+				query := fmt.Sprintf("UPDATE spotify_user SET name = '%v' WHERE line_id = '%v';", userMessage[1:len(userMessage)-2], event.Source.UserID)
 				err := dbQueryRow(db, query, event.Source.UserID, bot)
 				if err == nil {
 					PushMessageSay(event.Source.UserID, bot, "恭喜成為會員！")
@@ -94,24 +97,28 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client) {
 }
 
 func dbQueryRow(db *sql.DB, query string, userid string, bot *linebot.Client) (err error) {
-	// var response interface{}
+	var response interface{}
 	// if err := db.QueryRow(query).Scan(&response); err != nil {
 	// 	sayErr := "出了一點問題，詢問一下工程師這發生什麼事吧。"
 	// 	log.Println(query, " ＜＝出問題！\n", err)
 	// 	PushMessageSay(userid, bot, sayErr)
 	// 	return err
 	// }
-	row := db.QueryRow(query)
-	if err := row.Scan(); err != nil {
+	err = db.QueryRow(query).Scan(&response)
+	switch {
+	case err == sql.ErrNoRows:
+		log.Println(query, "沒有回傳資料")
+	case err != nil:
 		sayErr := "出了一點問題，詢問一下工程師這發生什麼事吧。"
 		log.Println(query, " ＜＝出問題！\n", err)
 		PushMessageSay(userid, bot, sayErr)
 		return err
+	default:
+		log.Printf("%v 對資料庫進行了 %v，資料庫回應為：%v", userid, query, response)
+		// log.Printf("%v 對資料庫進行了 %v", userid, query)
 	}
 	// println(query)
 	// println(userid)
 
-	// log.Printf("%v 對資料庫進行了 %v，資料庫回應為：%v", userid, query, response)
-	log.Printf("%v 對資料庫進行了 %v", userid, query)
 	return nil
 }
