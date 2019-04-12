@@ -15,7 +15,7 @@ import (
 //PushMessage 詢問是否要加入會員
 func PushMessage(UserID string, bot *linebot.Client) {
 	text := fmt.Sprintf("[%v][join member][yes]", UserID)
-	yesBtn := linebot.NewPostbackAction("我願意", text, "", "")
+	yesBtn := linebot.NewPostbackAction("點我加入會員或更改姓名", text, "", "")
 	butTemplate := linebot.NewButtonsTemplate(
 		"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxbYZs9-LkRScXKWthdxw8gwUDUBkG34q0DgZnkI1pOkfybDx-",
 		"來註冊成為我們的會員吧！",
