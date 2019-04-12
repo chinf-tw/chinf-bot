@@ -33,7 +33,7 @@ func EventTypeHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client, _tem
 			// if !isRepeat {
 			// 	_temporaryStorage["User_ID"] = append(_temporaryStorage["User_ID"], userid)
 			// }
-			query := `select build_JoinMember_cache('%v');`
+			query := `select build_JoinMember_cache($1);`
 			// dbQueryRow(db, query, userid, bot)
 
 			rows, err := db.Query(query, userid)
