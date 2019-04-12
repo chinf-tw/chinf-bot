@@ -94,7 +94,7 @@ func MessageHandle(event *linebot.Event, db *sql.DB, bot *linebot.Client) {
 }
 
 func dbQueryRow(db *sql.DB, query string, userid string, bot *linebot.Client) (err error) {
-	var response interface{}
+	// var response interface{}
 	// if err := db.QueryRow(query).Scan(&response); err != nil {
 	// 	sayErr := "出了一點問題，詢問一下工程師這發生什麼事吧。"
 	// 	log.Println(query, " ＜＝出問題！\n", err)
@@ -111,6 +111,7 @@ func dbQueryRow(db *sql.DB, query string, userid string, bot *linebot.Client) (e
 	// println(query)
 	// println(userid)
 
-	log.Printf("%v 對資料庫進行了 %v，資料庫回應為：%v", userid, query, response)
+	// log.Printf("%v 對資料庫進行了 %v，資料庫回應為：%v", userid, query, response)
+	log.Printf("%v 對資料庫進行了 %v", userid, query)
 	return nil
 }
