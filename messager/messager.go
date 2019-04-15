@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"chinf-bot/userinfo"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
@@ -53,5 +54,23 @@ func JoinMember(db *sql.DB, bot *linebot.Client) {
 			log.Println(err)
 		}
 		PushMessage(userID, bot)
+	}
+}
+
+func CarouselTemplate(UserID string, bot *linebot.Client, db *sql.DB) {
+	var columns []*linebot.CarouselColumn
+
+	userProfiles := userinfo.GetImages(bot, db)
+
+	for _, userProfile := range userProfiles {
+		column := linebot.NewCarouselColumn(userProfile.PictureURL, userProfile.DisplayName, "", nil)
+		columns = append(columns, column)
+	}
+
+	carouselTemplate := linebot.NewCarouselTemplate(columns...)
+	message := linebot.NewTemplateMessage("Sorry :(, please update your app.", carouselTemplate)
+	_, err := bot.PushMessage(UserID, message).Do()
+	if err != nil {
+		log.Println("CarouselTemplate: ", err)
 	}
 }

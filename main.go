@@ -98,6 +98,6 @@ func testCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 	}
 	//測試加入會員功能用
-	messager.PushMessage(os.Getenv("chinf_line_id"), botGlobal)
-	// userinfo.GetImage(botGlobal, db)
+	// messager.PushMessage(os.Getenv("chinf_line_id"), botGlobal)
+	messager.CarouselTemplate(os.Getenv("chinf_line_id"), botGlobal, db)
 }
