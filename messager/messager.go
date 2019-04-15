@@ -61,9 +61,9 @@ func CarouselTemplate(UserID string, bot *linebot.Client, db *sql.DB) {
 	var columns []*linebot.CarouselColumn
 
 	userProfiles := userinfo.GetImages(bot, db)
-
+	btn := linebot.NewMessageAction("test1", "test2")
 	for _, userProfile := range userProfiles {
-		column := linebot.NewCarouselColumn(userProfile.PictureURL, userProfile.DisplayName, "", nil)
+		column := linebot.NewCarouselColumn(userProfile.PictureURL, userProfile.DisplayName, userProfile.DisplayName, btn)
 		columns = append(columns, column)
 	}
 
