@@ -20,6 +20,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	// messager "github.com/chinf1996/Line-bot-messager"
 
@@ -36,7 +37,18 @@ func main() {
 		log.Println(err)
 	}
 	botGlobal = bot
-	// log.Println("Bot:", bot, " err:", err)
+	/**								*/
+	/*			測試time.Ticker		*/
+	/**								*/
+
+	d := time.Duration(time.Second * 2)
+	t := time.NewTicker(d)
+	defer t.Stop()
+	go runTicker(t)
+	/**								*/
+	/*								*/
+	/**								*/
+
 	http.HandleFunc("/callback", lineCallbackHandler)
 	http.HandleFunc("/chinf", selfCallbackHandler)
 	http.HandleFunc("/test", testCallbackHandler)
@@ -100,4 +112,13 @@ func testCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	//測試加入會員功能用
 	// messager.PushMessage(os.Getenv("chinf_line_id"), botGlobal)
 	messager.CarouselTemplate(os.Getenv("chinf_line_id"), botGlobal, db)
+}
+
+func runTicker(t *time.Ticker) {
+	i := 0
+	for {
+		<-t.C
+		i++
+		log.Println("timeout...", i)
+	}
 }
