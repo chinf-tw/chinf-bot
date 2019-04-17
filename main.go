@@ -15,6 +15,7 @@ package main
 import (
 	"chinf-bot/messager"
 	// "chinf-bot/userinfo"
+	"chinf-bot/flexMessager"
 	"database/sql"
 	"fmt"
 	"log"
@@ -111,7 +112,8 @@ func testCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	//測試加入會員功能用
 	// messager.PushMessage(os.Getenv("chinf_line_id"), botGlobal)
-	messager.CarouselTemplate(os.Getenv("chinf_line_id"), botGlobal, db)
+	// messager.CarouselTemplate(os.Getenv("chinf_line_id"), botGlobal, db)
+	flexMessager.TestFlex(os.Getenv("chinf_line_id"), botGlobal)
 }
 
 func runTicker(t *time.Ticker) {
